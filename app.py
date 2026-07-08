@@ -41,9 +41,29 @@ st.error("An error occurred.")
 img = Image.open("dog.jpg")
 st.image(img, width=200)
 
-# Checkbox
-if st.checkbox("Show message"):
-   st.write("Checkbox is checked!")
+# Dynamic checkboxes generated from a list
+st.subheader("Select your skills")
+
+skills = ["Python", "HTML", "Data Analysis", "AI", "Robotics"]
+selected_skills = []  # empty list to collect selected skills
+
+# Loop through the list to create one checkbox per skill
+for skill in skills:
+    if st.checkbox(skill):            # creates a checkbox with the skill name
+        selected_skills.append(skill)  # add to selected list if ticked
+
+# Display results based on what was selected
+if len(selected_skills) > 0:
+    st.success(f"You selected {len(selected_skills)} skill(s):")
+    for s in selected_skills:
+        st.write(f"  - {s}")
+
+    # Calculate and display a percentage
+    percentage = round(len(selected_skills) / len(skills) * 100)
+    st.metric("Skills coverage", f"{percentage}%")
+else:
+    st.warning("Please select at least one skill.")
+
    
 # Radio button
 gender = st.radio("Select Gender:", ['Male', 'Female'])
@@ -71,8 +91,31 @@ else:
     st.info("No hobbies selected yet.")
 
 # Slider
+# Slider - original
 level = st.slider("Choose a level", 1, 5)
-st.write(f"Your level: {get_level_description(level)}")
+st.write(f"Selected level: {level}")
+
+# New slider for practice hours
+hours = st.slider("Hours of practice per week", 1, 20, 5)
+
+# Calculate totals using arithmetic operators
+monthly = hours * 4          # multiplication
+yearly = hours * 52          # multiplication
+daily = round(hours / 7, 1)  # division and rounding
+remaining = 500 - yearly     # subtraction
+
+# Display the yearly total as a prominent metric
+st.metric("Yearly Practice Hours", yearly)
+st.write(f"That is about {daily} hours per day")
+st.write(f"And about {monthly} hours per month")
+
+# Conditional feedback based on the calculation
+if yearly > 500:
+    st.success(f"You are on track to mastery with {yearly} hours per year!")
+elif yearly > 250:
+    st.info(f"Good progress! {remaining} more hours to reach 500.")
+else:
+    st.warning(f"Keep going! You need {remaining} more hours to reach 500.")
 
 
 # Text input with string processing
